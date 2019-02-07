@@ -6,6 +6,11 @@ import numpy as np
 
 linecommon = "=======================================================================================\n"
 #=======================================================================================
+#                             calculation choice
+#=======================================================================================
+interaction_flag = input("Do you want to calculate elastic interaction energy: y or n \n")
+
+#=======================================================================================
 #                      specify slip system
 #=======================================================================================
 slip_system = input("Slip system : 110  <------>   001 \n")
@@ -52,28 +57,42 @@ else:
     print("The pressure is not included in the code.")
     exit()
 
-print(linecommon)
-#=======================================================================================
-#                               jog geometry
-#=======================================================================================
-h = float(input("The height of jog (units: atom spacing) \n"))
-w = float(input("The width of jog pair: (units: Angstrom) \n"))
+eV2GPa = 160.21766208
 
-bmag        = alat/np.sqrt(2)  # Angstrom
-if(slip_system = '110'):
+print(linecommon)
+
+
+
+#=======================================================================================
+#                           estimate  jog formation energy
+#=======================================================================================
+bmag = alat/np.sqrt(2)  # Angstrom
+h    = float(input("The height of jog (units: atom spacing) \n"))
+
+if(slip_system == '110'):
     atom_space  = 0.5*bmag
 else:
     atom_space  = 0.5*alat
 
+h     = h*atom_space
+
+W_f = 0.25*mu*bmag**2*h/(np.pi * (1-nu))
 print('mu               : ', mu,  '     nu   = ', nu) 
 print('lattice constant : ', alat,'     bmag = ', bmag)
+print('Formation energy : ', W_f/eV2GPa)
 print(linecommon)
 #=======================================================================================
-#                       calculate elastic interaction energy
+#                               jog interaction
 #=======================================================================================
-Eint = -mu*bmag**2*(h*atom_space)*2/(8*np.pi*w*(1-nu))
-Eint = Eint/160.21766208
+if( interaction_flag == 'y'):
+    w = float(input("The width of jog pair: (units: Angstrom) \n"))
 
-print("The elastic energy under periodic boundary condition : ", np.log(4)*Eint)
-print("This is the energy just for one jog pair. <===Attention !!!!!!")
-print(linecommon)
+    #=======================================================================================
+    #                       calculate elastic interaction energy
+    #=======================================================================================
+    Eint = -mu*bmag**2*h*2/(8*np.pi*w*(1-nu))
+    Eint = Eint/eV2GPa
+
+    print("The elastic energy under periodic boundary condition : ", np.log(4)*Eint)
+    print("This is the energy just for one jog pair. <===Attention !!!!!!")
+    print(linecommon)
