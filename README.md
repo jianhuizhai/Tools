@@ -5,3 +5,5 @@
 * jogInteraction.py is used to calculate elastic interaction energy of a jog pair.
 
 * coulomb_vs_elastic.py is used to compare the coulomb force and elastic interaction force.
+
+* jogInteraction_isotropic.py is used to calculate elastic interaction energy of jog pair by using isotropic properties.
