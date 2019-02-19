@@ -1,12 +1,16 @@
 '''This code is used to calculate jog elastic interaction energy'''
-'''mu and nu are shear modulus and poisson ration, respectively. isotropic is considered.'''
-'''mu and nu are calculated by GULP.'''
+'''mu and nu are shear modulus and poisson ration, respectively. anisotropic is considered.'''
 
 import numpy as np
 
 
 linecommon_major = "=======================================================================================\n"
 linecommon_minor = "---------------------------------------------------------------------------------------\n"
+#=======================================================================================
+#                             calculation choice
+#=======================================================================================
+#interaction_flag = input("Do you want to calculate elastic interaction energy: y or n \n")
+
 #=======================================================================================
 #                      specify slip system
 #=======================================================================================
@@ -24,32 +28,47 @@ pressure = int(input("type the pressure of system: (100, 60, 30 or 0 -- units in
 
 if(pressure == 100):
     alat = 3.82776
-    mu   =  204.44991
-    nu   =  0.26630
+    mu   = 294.3
+    if(slip_system == '110'):
+        nu   = 0.27
+    elif(slip_system == '001'):
+        nu   = 0.16
 elif(pressure == 60):
     alat = 3.9355
-    mu   =  182.26174
-    nu   =  0.27421
+    mu   = 236.7
+    if(slip_system == '110'):
+        nu   = 0.25
+    elif(slip_system == '001'):
+        nu   = 0.18
 elif(pressure == 30):
     alat = 4.047
-    mu   =  162.31686
-    nu   =  0.28573
+    mu   = 184.4
+    if(slip_system == '110'):
+        nu   = 0.23
+    elif(slip_system == '001'):
+        nu   = 0.20
 elif(pressure == 0):
     alat = 4.218
-    mu   =  137.46615
-    nu   =  0.31095
+    mu   = 116.5
+    if(slip_system =='110'):
+        nu   = 0.18
+    elif(slip_system == '001'):
+        nu   = 0.27
 else:
     print("The pressure is not included in the code.")
     exit()
 
 eV2GPa = 160.21766208
+
 print(linecommon_major)
+
 #=======================================================================================
-#                               jog geometry
+#                           estimate  jog formation energy
 #=======================================================================================
 bmag = alat/np.sqrt(2)  # Angstrom
 print('mu               : ', mu,  '     nu   = ', nu) 
 print('lattice constant : ', alat,'     bmag = ', bmag, '\n')
+# h    = float(input("The height of jog (units: atom spacing) \n"))
 
 if(slip_system == '110'):
     atom_space  = 0.5*bmag
