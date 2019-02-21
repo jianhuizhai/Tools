@@ -79,8 +79,10 @@ box_size, width = np.loadtxt('width_jog_'+slip_system+'_'+str(pressure)+'GPa.dat
 
 for i in range(len(box_size)):
     w = width[i]
-    print("                     The box size is %10i " %box_size[i])
+    
     print(linecommon_major)
+    print("                     The box size is %10i " %box_size[i])
+
     for h in (1,2):
         if(h==1):
             jog_type = 'unit jog'
@@ -88,16 +90,12 @@ for i in range(len(box_size)):
             jog_type = 'twice jog'
         else:
             print("Unkown jog type! Please check the code!")
-        print('h = ', h)
+
         height = h*atom_space
 
         W_f = 0.25*mu*bmag**2*height/(np.pi * (1-nu))
 
         print(linecommon_minor)
-    #=======================================================================================
-    #                               jog interaction
-    #=======================================================================================
-    
 
     #=======================================================================================
     #                       calculate elastic interaction energy
@@ -105,9 +103,10 @@ for i in range(len(box_size)):
         Eint = -mu*bmag**2*height**2/(8*np.pi*w*(1-nu))
         Eint = Eint/eV2GPa
 
-        print('The formation and elastic interaction energy of %s are: ' %jog_type)
+        print('The formation and elastic interaction energy of %s (h = %d) are: ' %(jog_type,h))
         print(linecommon_minor)
-        print('Formation energy : ', W_f/eV2GPa)
-        print("The elastic energy of one jog pair under periodic boundary condition : ", np.log(4)*Eint)
-        print("The elastic energy of two jog pair under periodic boundary condition : ", 2*np.log(4)*Eint)
-        print(linecommon_minor)
+        print('One jog pair formation energy : %10.6f' %(2.0*W_f/eV2GPa))
+        print('Two jog pair formation energy : %10.6f' %(4.0*W_f/eV2GPa))
+        print("The elastic energy of one jog pair under periodic boundary condition : %10.6f" %(np.log(4)*Eint))
+        print("The elastic energy of two jog pair under periodic boundary condition : %10.6f" %(2*np.log(4)*Eint))
+print(linecommon_major)
