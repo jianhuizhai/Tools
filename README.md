@@ -7,3 +7,5 @@
 * coulomb_vs_elastic.py is used to compare the coulomb force and elastic interaction force.
 
 * jogInteraction_isotropic.py is used to calculate elastic interaction energy of jog pair by using isotropic properties.
+
+* rotation.py is used to rotate atoms along x axis by a specified degree. Details information see the code.
