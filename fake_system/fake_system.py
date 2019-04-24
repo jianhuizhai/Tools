@@ -11,6 +11,7 @@ from output_fake import DumpOutput
 linecommon = '========================================================='
 
 print(linecommon)
+'''
 n = int(input("How many atoms are deleted : "))
 ions=[]
 while (n>0):
@@ -18,6 +19,9 @@ while (n>0):
     n = n-1
 
 ions = np.array( ions, dtype = int )  # change list to int array. 
+'''
+ions = np.loadtxt("deleted.dat", usecols=(0))
+print("The already deleted ions are : ")
 print(ions)
 
 
@@ -40,7 +44,7 @@ print(linecommon)
 
 skipline  = 16
 atom_id, atom_type, x,y,z = np.loadtxt(lmp_file, skiprows=skipline, usecols=(0,1,2,3,4), unpack=True)
-eng_id, eng_eng = np.loadtxt(energy_file, usecols=(0,5), unpack=True)
+eng_id, eng_eng = np.loadtxt(energy_file, usecols=(0,6), unpack=True)
 
 '''
 print("type(atom_id) : ", type(atom_id))
