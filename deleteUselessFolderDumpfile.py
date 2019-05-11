@@ -21,3 +21,4 @@ for folder in os.listdir('.'):
             os.system('rm -f dump.relax*')
             os.system('rm -f *.out')
             os.chdir('../')
+            
