@@ -53,7 +53,7 @@ elif flag == '2' :
                                 for filename in os.listdir( os.path.join(energy_infoPath, folder) ):
                                     if filename.startswith('dump.relax'):
                                         print( filename )
-                                        #os.remove( os.path.join(energy_infoPath, folder, filename) )  ## this line should be uncommented when using this code to delete files
+                                        os.remove( os.path.join(energy_infoPath, folder, filename) )  ## this line should be uncommented when using this code to delete files
                             
                 else:
                     print( linecommon )
