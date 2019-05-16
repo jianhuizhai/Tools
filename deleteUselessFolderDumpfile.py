@@ -7,12 +7,13 @@ linecommon = "==================================================================
 
 print( linecommon )
 flag = input("delete just subfolders (1) or walk through subfolders (2) : ")
+flag_info = input("Do you want to show the info about deleted files (y or n) : ")
 print( linecommon )
 
 if flag == '1':
     folders = np.loadtxt('energy_info.dat', dtype=str,usecols=(0))
     keepFolder = folders[0]
-    print(keepFolder, type(keepFolder) )
+    # print(keepFolder, type(keepFolder) )
     for folder in os.listdir('.'):
         if os.path.isdir(folder):
             if folder == keepFolder:
@@ -20,10 +21,10 @@ if flag == '1':
                 print( "{}{:10s}".format('The dumpfiles in this folder are keeped.  ',   folder) )
         
             elif folder != 'reference' and folder != '__pycache__' :
-                print(linecommon)
-                print(folder)
+                if flag_info == 'y':
+                    print(linecommon)
+                    print('deleting dumpfiles in folder : %10s.' %folder)
                 os.chdir( folder )
-                print('deleting dumpfiles in this folder')
                 os.system('rm -f dump.relax*')
                 os.system('rm -f *.out')
                 os.chdir('../')
@@ -46,17 +47,23 @@ elif flag == '2' :
                             #print( linecommon )
                             #print('folder in %s : %s' %(energy_infoPath, folder) )  
                             if folder == keepFolder:
-                                print(linecommon)
-                                print( "{}{:10s}".format('The dumpfiles in this folder are keeped.  ',   folder) )
+                                if flag_info == 'y' :
+                                    print(linecommon)
+                                    print( "{}{:10s}".format('The dumpfiles in this folder are keeped.  ',   folder) )
         
                             elif folder != 'reference' and folder != '__pycache__' :
-                                print(linecommon)
-                                print('deleteing dumpfiles in folder : %10s' %folder )
+                                if flag_info == 'y':
+                                    print(linecommon)
+                                    print('deleteing dumpfiles in folder : %10s' %folder )
                                 for filename in os.listdir( os.path.join(energy_infoPath, folder) ):
+                                    if filename == 'initial.lmp':
+                                        os.remove( os.path.join(energy_infoPath, folder, 'initial.lmp'))
+                                        
                                     if filename.startswith('dump.relax'):
-                                        print( filename )
+                                        if flag_info == 'y':
+                                            print( filename )
                                         os.remove( os.path.join(energy_infoPath, folder, filename) )  ## this line should be uncommented when using this code to delete files
-                            
+                                
                 else:
                     print( linecommon )
                     exit('energy_info doesn\'t exists in %s' %energy_infoPath )
