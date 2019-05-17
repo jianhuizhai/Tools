@@ -51,7 +51,14 @@ elif flag == '2' :
                                     print(linecommon)
                                     print( "{}{:10s}".format('The dumpfiles in this folder are keeped.  ',   folder) )
         
-                            elif folder != 'reference' and folder != '__pycache__' :
+                            elif folder == 'reference' :
+                                # keep the last dump file in order to have a look at config
+                                if flag_info == 'y' :
+                                    print( linecommon )
+                                    print( 'deleting files in folder : reference')
+                                os.remove( os.path.join(energy_infoPath, folder, 'initial.lmp') )
+                                os.remove( os.path.join(energy_infoPath, folder, 'dump.relax0') )
+                            else:
                                 if flag_info == 'y':
                                     print(linecommon)
                                     print('deleteing dumpfiles in folder : %10s' %folder )
