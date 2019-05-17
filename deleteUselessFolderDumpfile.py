@@ -62,10 +62,11 @@ elif flag == '2' :
                                 if flag_info == 'y':
                                     print(linecommon)
                                     print('deleteing dumpfiles in folder : %10s' %folder )
+                                
+                                # delete initial.lmp in the folder
+                                os.remove( os.path.join(energy_infoPath, folder, 'initial.lmp'))
+                                
                                 for filename in os.listdir( os.path.join(energy_infoPath, folder) ):
-                                    if filename == 'initial.lmp':
-                                        os.remove( os.path.join(energy_infoPath, folder, 'initial.lmp'))
-                                        
                                     if filename.startswith('dump.relax'):
                                         if flag_info == 'y':
                                             print( filename )
