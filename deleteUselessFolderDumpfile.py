@@ -70,7 +70,12 @@ elif flag == '2' :
                                     if filename.startswith('dump.relax'):
                                         if flag_info == 'y':
                                             print( filename )
-                                        os.remove( os.path.join(energy_infoPath, folder, filename) )  ## this line should be uncommented when using this code to delete files
+                                        os.remove( os.path.join(energy_infoPath, folder, filename) )
+                                    
+                                    if filename.startswith('slurm'):
+                                        if flag_info == 'y':
+                                            print( filename )
+                                        os.remove( os.path.join(energy_infoPath, folder, filename) )
                                 
                 else:
                     print( linecommon )
