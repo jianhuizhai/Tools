@@ -7,10 +7,12 @@ linecommon = "==================================================================
 
 print( linecommon )
 flag = input("delete just subfolders (1) or walk through subfolders (2) : ")
-flag_info = input("Do you want to show the info about deleted files (y or n) : ")
+flag_info = input("Do you want to show the info about deleted files (y or n) : ").lower()
 print( linecommon )
 
 if flag == '1':
+    if not os.path.exists('energy_info.dat'):
+        exit('energy_info.dat does not exist.')
     folders = np.loadtxt('energy_info.dat', dtype=str,usecols=(0))
     keepFolder = folders[0]
     # print(keepFolder, type(keepFolder) )
