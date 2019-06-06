@@ -3,32 +3,57 @@
 import numpy as np
 import os
 
-linecommon = "==============================================================================================="
+linecommon = "="*100
 
 print( linecommon )
-flag = input("delete just subfolders (1) or walk through subfolders (2) : ")
+flag      = input("delete just subfolders (1) or walk through subfolders (2) : ").lower()
+flag_lmp  = input("Do you want to delete lmp file : ").lower()
 flag_info = input("Do you want to show the info about deleted files (y or n) : ").lower()
+flag_keep = input("Do you want to keep the negative binding energy (1) or just the most favorable one (2) (1 or 2) : ")
 print( linecommon )
 
 if flag == '1':
-    if not os.path.exists('energy_info.dat'):
-        exit('energy_info.dat does not exist.')
-    folders = np.loadtxt('energy_info.dat', dtype=str,usecols=(0))
-    keepFolder = folders[0]
+    folders, binding_energy = np.loadtxt('energy_info.dat', usecols=([0,6]), unpack=True )
+    keepFolder=[]
+    if flag_keep == '1' :
+        for i in range( len(folders) ):
+            if binding_energy[i] <= 0 :
+                keepFolder.append( folders[i] )
+    elif flag_keep == '2':
+        for i in range(3):
+            keepFolder.append( folders[i] )
+    '''
+    for k in keepFolder:
+        print( 'keepFolder :', k )
     # print(keepFolder, type(keepFolder) )
+    '''
     for folder in os.listdir('.'):
         if os.path.isdir(folder):
-            if folder == keepFolder:
+            if any( [ folder == str( int(k) ) for k in keepFolder ] ):
                 print(linecommon)
-                print( "{}{:10s}".format('The dumpfiles in this folder are keeped.  ',   folder) )
+                print( "The dumpfiles in this folder are keeped : {:10s}".format(folder) )
+                if flag_lmp == 'y':
+                    os.chdir( folder )
+                    os.system( 'rm -f *.lmp' )
+                    os.chdir( '../' )
         
             elif folder != 'reference' and folder != '__pycache__' :
                 if flag_info == 'y':
                     print(linecommon)
                     print('deleting dumpfiles in folder : %10s.' %folder)
                 os.chdir( folder )
-                os.system('rm -f dump.relax*')
-                os.system('rm -f *.lmp *.out')
+                os.system('rm -f dump.relax* *.out')
+                if flag_lmp == 'y':
+                    os.system('rm -f *.lmp ')
+                os.chdir('../')
+            elif folder == 'reference':
+                if flag_info == 'y':
+                    print(linecommon)
+                    print('deleting files in folder : {:10s}'.format(folder) )
+                os.chdir( folder )
+                os.system( 'rm -f dump.relax0 *.out' )
+                if flag_lmp == 'y':
+                    os.system( 'rm -f *.lmp ' )
                 os.chdir('../')
 
 elif flag == '2' :
@@ -41,18 +66,24 @@ elif flag == '2' :
                 if os.path.exists( os.path.join(energy_infoPath, 'energy_info.dat') ):
                     print( linecommon )
                     print( energy_infoPath )
-                    energy_infoFolders = np.loadtxt(os.path.join(energy_infoPath, 'energy_info.dat'), dtype= int ,usecols=([0]) ) 
-                    keepFolder         = str( energy_infoFolders[0] )
+
+                    # determine folders are keeped
+                    folders, binding_energy = np.loadtxt( os.path.join(energy_infoPath, 'energy_info.dat'), usecols=([0,6]), unpack=True )
+                    keepFolder=[]
+                    if flag_keep == '1' :
+                        for i in range( len(folders) ):
+                            if binding_energy[i] <= 0 :
+                                keepFolder.append( folders[i] )
+                    elif flag_keep == '2':
+                        for i in range(3):
+                            keepFolder.append( folders[i] )
 
                     for folder in os.listdir( energy_infoPath ):
-                        #print('things in %s : %s' %(energy_infoPath,folder) )
                         if os.path.isdir( os.path.join(energy_infoPath,folder) ):  # import. It will only show part of folders in this folder is use os.path.isdir(folder)
-                            #print( linecommon )
-                            #print('folder in %s : %s' %(energy_infoPath, folder) )  
-                            if folder == keepFolder:
+                            if any( [ folder == str( int(k) ) for k in keepFolder ] ) :
                                 if flag_info == 'y' :
                                     print(linecommon)
-                                    print( "{}{:10s}".format('The dumpfiles in this folder are keeped.  ',   folder) )
+                                    print( "The dumpfiles in this folder are keeped : {:10s}".format(folder) )
 
                             # delete files in folder : reference
                             elif folder == 'reference' :
@@ -85,10 +116,12 @@ elif flag == '2' :
                                         os.remove( os.path.join(energy_infoPath, folder, filename) )
                                     
                                     # delete .lmp file in the folder
-                                    if filename.endswith('.lmp') :
+                                    
+                                    if filename.endswith('.lmp') and flag_lmp=='y' :
                                         if flag_info == 'y':
                                             print( filename )
                                         os.remove( os.path.join(energy_infoPath, folder, filename) )
+                                    
                                 
                 else:
                     print( linecommon )
