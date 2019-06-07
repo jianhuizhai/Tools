@@ -32,17 +32,19 @@ if flag == '1':
             if any( [ folder == str( int(k) ) for k in keepFolder ] ):
                 print(linecommon)
                 print( "The dumpfiles in this folder are keeped : {:10s}".format(folder) )
+                
+                os.chdir( folder )
+                os.system('rm -f dump.relax0 slurm*')
                 if flag_lmp == 'y':
-                    os.chdir( folder )
                     os.system( 'rm -f *.lmp' )
-                    os.chdir( '../' )
+                os.chdir( '../' )
         
             elif folder != 'reference' and folder != '__pycache__' :
                 if flag_info == 'y':
                     print(linecommon)
                     print('deleting dumpfiles in folder : %10s.' %folder)
                 os.chdir( folder )
-                os.system('rm -f dump.relax* *.out')
+                os.system('rm -f dump.relax* slurm*')
                 if flag_lmp == 'y':
                     os.system('rm -f *.lmp ')
                 os.chdir('../')
@@ -51,7 +53,7 @@ if flag == '1':
                     print(linecommon)
                     print('deleting files in folder : {:10s}'.format(folder) )
                 os.chdir( folder )
-                os.system( 'rm -f dump.relax0 *.out' )
+                os.system( 'rm -f dump.relax0 slurm*' )
                 if flag_lmp == 'y':
                     os.system( 'rm -f *.lmp ' )
                 os.chdir('../')
@@ -84,6 +86,11 @@ elif flag == '2' :
                                 if flag_info == 'y' :
                                     print(linecommon)
                                     print( "The dumpfiles in this folder are keeped : {:10s}".format(folder) )
+                                os.chdir( folder )
+                                os.system('rm -f dump.relax0 slurm*')
+                                if flag_lmp == 'y':
+                                    os.system( 'rm -f *.lmp' )
+                                os.chdir( '../' )
 
                             # delete files in folder : reference
                             elif folder == 'reference' :
@@ -95,6 +102,8 @@ elif flag == '2' :
                                     if filename.endswith('.lmp') or filename == 'dump.relax0':
                                         if flag_info == 'y':
                                             print( filename )
+                                        os.remove( os.path.join(energy_infoPath, folder, filename) )
+                                    if filename.startswith('slurm'):
                                         os.remove( os.path.join(energy_infoPath, folder, filename) )
                             
                             # delete files in other folders
