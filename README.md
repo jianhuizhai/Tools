@@ -11,3 +11,5 @@
 * rotation.py is used to rotate atoms along x axis by a specified degree. Details information see the code.
 
 * deleteUselessFolderDumpfile.py is used to delete useless dumpfiles in seperate folders (useful in calculating point distribution energy)
+
+* zeus2my.py cp is used to copy files in subfolders between hpc and my computer.
