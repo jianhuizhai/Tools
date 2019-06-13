@@ -23,11 +23,7 @@ if flag == '1':
     elif flag_keep == '2':
         for i in range(3):
             keepFolder.append( folders[i] )
-    '''
-    for k in keepFolder:
-        print( 'keepFolder :', k )
-    # print(keepFolder, type(keepFolder) )
-    '''
+ 
     for folder in os.listdir('.'):
         if os.path.isdir(folder):
             if any( [ folder == str( int(k) ) for k in keepFolder ] ):
@@ -44,19 +40,17 @@ if flag == '1':
                 if flag_info == 'y':
                     print(linecommon)
                     print('deleting dumpfiles in folder : %10s.' %folder)
+                
                 os.chdir( folder )
                 os.system('rm -f dump.relax* slurm* *.lmp')
-#                if flag_lmp == 'y':
-#                    os.system('rm -f *.lmp ')
                 os.chdir('../')
+            
             elif folder == 'reference':
                 if flag_info == 'y':
                     print(linecommon)
                     print('deleting files in folder : {:10s}'.format(folder) )
                 os.chdir( folder )
                 os.system( 'rm -f dump.relax0 slurm* *.lmp' )
-#                if flag_lmp == 'y':
-#                    os.system( 'rm -f *.lmp ' )
                 os.chdir('../')
 
 elif flag == '2' :
@@ -68,6 +62,8 @@ elif flag == '2' :
                 energy_infoPath = os.path.join(path, folderName, subfolder )
 
                 if not os.path.exists( os.path.join(energy_infoPath, 'energy_info.dat') ):
+                    print( linecommon )
+                    print( 'energy_info.dat doest not exist.')
                     os.system('python ~/bin/extractData_binding_energy.py')
                 
                 else:
@@ -75,11 +71,27 @@ elif flag == '2' :
                     print( energy_infoPath )
 
                     # determine folders are keeped
-                    folders, binding_energy = np.loadtxt( os.path.join(energy_infoPath, 'energy_info.dat'), usecols=([0,6]), unpack=True )
-                    if binding_energy[-1] == 0 :
+                    energy_info = np.loadtxt( os.path.join(energy_infoPath, 'energy_info.dat') )
+                    
+                    if energy_info.shape[1] != 7 :
+                        cwd = os.getcwd()
                         print( linecommon )
-                        print('energy_info.dat is old rerun extract binding_energy to get new one: ')
+                        print('The data structure of energy_info.dat is wrong: ')
+                        os.chdir( energy_infoPath )
                         os.system('python ~/bin/extractData_binding_energy.py')
+                        os.chdir( cwd )
+                    else:
+                        binding_energy = energy_info[:, 6]
+                        if binding_energy[-1] == 0 :
+                            cwd = os.getcwd()
+                            print( linecommon )
+                            print('energy_info.dat is old rerun extract binding_energy to get new one: ')
+                            os.chdir( energy_infoPath )
+                            os.system('python ~/bin/extractData_binding_energy.py')
+                            os.chdir( cwd )
+                    
+                    folders = energy_info[:,0]
+                    binding_energy = energy_info[:,6] 
                     keepFolder=[]
                     if flag_keep == '1' :
                         for i in range( len(folders) ):
@@ -95,11 +107,12 @@ elif flag == '2' :
                                 if flag_info == 'y' :
                                     print(linecommon)
                                     print( "The dumpfiles in this folder are keeped : {:10s}".format(folder) )
-                                os.chdir( folder )
-                                os.system('rm -f dump.relax0 slurm*')
-                                if flag_lmp == 'y':
-                                    os.system( 'rm -f *.lmp' )
-                                os.chdir( '../' )
+                                for filename in os.listdir( os.path.join(energy_infoPath, folder) ):
+                                    if filename == 'dump.relax0' or filename.startswith('slurm'):
+                                        os.remove( os.path.join(energy_infoPath, folder, filename) )
+                                
+                                    if flag_lmp == 'y' and filename.endswith('.lmp') :
+                                        os.remove( os.path.join(energy_infoPath, folder, filename) )                                        
 
                             # delete files in folder : reference
                             elif folder == 'reference' :
@@ -120,8 +133,7 @@ elif flag == '2' :
                                 if flag_info == 'y':
                                     print(linecommon)
                                     print('deleteing dumpfiles in folder : %10s' %folder )
-                                
-                                
+                                      
                                 for filename in os.listdir( os.path.join(energy_infoPath, folder) ):
                                     if filename.startswith('dump.relax'):
                                         if flag_info == 'y':
@@ -133,8 +145,7 @@ elif flag == '2' :
                                             print( filename )
                                         os.remove( os.path.join(energy_infoPath, folder, filename) )
                                     
-                                    # delete .lmp file in the folder
-                                    
+                                    # delete .lmp file in the folder            
                                     if filename.endswith('.lmp'):
                                         if flag_info == 'y':
                                             print( filename )
