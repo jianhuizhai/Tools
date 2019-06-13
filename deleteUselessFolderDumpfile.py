@@ -65,10 +65,14 @@ elif flag == '2' :
         for subfolder in subfolders:
             if subfolder == 'v_mg' or subfolder == 'v_o':
                 energy_infoPath = os.path.join(path, folderName, subfolder )
+                
+                ## obtain energy_info.dat
+                os.system('python ~/bin/extractData_binding_energy.py')
+                '''
                 if os.path.exists( os.path.join(energy_infoPath, 'energy_info.dat') ):
                     print( linecommon )
                     print( energy_infoPath )
-
+                '''
                     # determine folders are keeped
                     folders, binding_energy = np.loadtxt( os.path.join(energy_infoPath, 'energy_info.dat'), usecols=([0,6]), unpack=True )
                     keepFolder=[]
