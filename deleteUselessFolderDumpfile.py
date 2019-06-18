@@ -64,9 +64,22 @@ elif flag == '2' :
                 if not os.path.exists( os.path.join(energy_infoPath, 'energy_info.dat') ):
                     print( linecommon )
                     print( 'energy_info.dat doest not exist.')
+                    cwd = os.getcwd()
+                    os.chdir( energy_infoPath )
                     os.system('python ~/bin/extractData_binding_energy.py')
+                    os.chdir( cwd )
                 
                 else:
+                    # determine the size of energy_info.dat
+                    if not os.path.getsize( os.path.join(energy_infoPath, 'energy_info.dat') ):
+                        print( linecommon )
+                        print( 'energy_info.dat is empty.')
+                        cwd = os.getcwd()
+                        os.chdir( energy_infoPath )
+                        os.system('python ~/bin/extractData_binding_energy.py')
+                        os.chdir( cwd )
+                    
+                    
                     print( linecommon )
                     print( energy_infoPath )
 
@@ -74,18 +87,18 @@ elif flag == '2' :
                     energy_info = np.loadtxt( os.path.join(energy_infoPath, 'energy_info.dat') )
                     
                     if energy_info.shape[1] != 7 :
-                        cwd = os.getcwd()
                         print( linecommon )
                         print('The data structure of energy_info.dat is wrong: ')
+                        cwd = os.getcwd()
                         os.chdir( energy_infoPath )
                         os.system('python ~/bin/extractData_binding_energy.py')
                         os.chdir( cwd )
                     else:
                         binding_energy = energy_info[:, 6]
                         if binding_energy[-1] == 0 :
-                            cwd = os.getcwd()
                             print( linecommon )
                             print('energy_info.dat is old rerun extract binding_energy to get new one: ')
+                            cwd = os.getcwd()
                             os.chdir( energy_infoPath )
                             os.system('python ~/bin/extractData_binding_energy.py')
                             os.chdir( cwd )
