@@ -8,21 +8,24 @@ linecommon = "="*100
 print( linecommon )
 flag      = input("delete just subfolders (1) or walk through subfolders (2) : ").lower()
 flag_info = input("Do you want to show the info about deleted files (y or n) : ").lower()
-flag_keep = input("Do you want to keep the negative binding energy (1) or just the most favorable one (2) (1 or 2) : ")
+
+#flag_keep = input("Do you want to keep the negative binding energy (1) or just the most favorable one (2) (1 or 2) : ")
 
 print( linecommon )
 
 if flag == '1':
     folders, binding_energy = np.loadtxt('energy_info.dat', usecols=([0,6]), unpack=True )
     keepFolder=[]
-    if flag_keep == '1' :
-        for i in range( len(folders) ):
-            if binding_energy[i] <= 0 :
-                keepFolder.append( folders[i] )
+    #if flag_keep == '1' :
+    for i in range( len(folders) ):
+        if binding_energy[i] <= 0 :
+            keepFolder.append( folders[i] )
+    '''
     elif flag_keep == '2':
         for i in range(3):
             keepFolder.append( folders[i] )
- 
+    '''
+    
     for folder in os.listdir('.'):
         if os.path.isdir(folder):
             if any( [ folder == str( int(k) ) for k in keepFolder ] ):
@@ -96,14 +99,15 @@ elif flag == '2' :
                     folders = energy_info[:,0]
                     binding_energy = energy_info[:,6] 
                     keepFolder=[]
-                    if flag_keep == '1' :
-                        for i in range( len(folders) ):
-                            if binding_energy[i] <= 0 :
-                                keepFolder.append( folders[i] )
+                    
+                    for i in range( len(folders) ):
+                        if binding_energy[i] <= 0 :
+                            keepFolder.append( folders[i] )
+                    '''
                     elif flag_keep == '2':
                         for i in range(3):
                             keepFolder.append( folders[i] )
-
+                    '''
                     for folder in os.listdir( energy_infoPath ):
                         if os.path.isdir( os.path.join(energy_infoPath,folder) ):  # import. It will only show part of folders in this folder is use os.path.isdir(folder)
                             if any( [ folder == str( int(k) ) for k in keepFolder ] ) :
