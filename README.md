@@ -29,3 +29,5 @@
 * zip final_file.zip file1 file2 ... filen (zip results.zip initial.lmp dump.relax* )
 
 * unzip final_file.zip (unzip results.zip)
+
+* atomsk -diff initial.lmp dump.relax35
