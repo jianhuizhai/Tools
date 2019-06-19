@@ -50,8 +50,6 @@ if flag == '1':
                             if filename.startswith('dump.relax'):
                                 zip.write( filename )
                                 os.remove( filename )
-                            if filename.startswith('slurm'):
-                                os.remove( filename )
                     #print( zip.namelist() )
             
             # unzip
