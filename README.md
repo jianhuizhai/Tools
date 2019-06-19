@@ -30,4 +30,4 @@
 
 * unzip final_file.zip (unzip results.zip)
 
-* atomsk -diff initial.lmp dump.relax35
+* atomsk --diff initial.lmp dump.relax35
