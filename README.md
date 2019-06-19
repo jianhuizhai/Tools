@@ -15,3 +15,17 @@
 * zeus2my.py is used to copy files in subfolders between hpc and my computer.
 
 * zip_unzip.py is used to zip or zip files in folders v_mg and/or v_o (including subfolders in v_mg and/or v_o).
+
+# Useful commands
+
+* gzip name_of_file (gzip initial.lmp)
+
+* gunzip name_of_file (gunzip initial.lmp.gz)
+
+* tar -czvf final_file.tar.gz file1 file2 ... filen (tar -czvf results.tar.gz initial.lmp dump.relax* build_noclimb.sh)
+
+* tar -xzvf final_file.tar.gz (tar -xzvf results.tar.gz)
+
+* zip final_file.zip file1 file2 ... filen (zip results.zip initial.lmp dump.relax* )
+
+* unzip final_file.zip (unzip results.zip)
