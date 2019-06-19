@@ -12,4 +12,6 @@
 
 * deleteUselessFolderDumpfile.py is used to delete useless dumpfiles in seperate folders (useful in calculating point distribution energy)
 
-* zeus2my.py cp is used to copy files in subfolders between hpc and my computer.
+* zeus2my.py is used to copy files in subfolders between hpc and my computer.
+
+* zip_unzip.py is used to zip or zip files in folders v_mg and/or v_o (including subfolders in v_mg and/or v_o).
