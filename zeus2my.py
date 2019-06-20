@@ -9,8 +9,7 @@ linecomment = '='*80
 leaveFolder : things in this folder will not copy
 '''
 
-flag_cp = input("Do you want to copy things to zeus (1) or to your computer (2)--- (1 or 2) : ")
-
+flag_cp     = input("Do you want to copy things to zeus (1) or to your computer (2)--- (1 or 2) : ")
 
 if not os.path.exists('energy_info.dat'):
     print( linecomment )
@@ -40,12 +39,26 @@ elif flag_cp == '2':
 #================================================================================================
 #                   cp folder in zeus to my work direction
 #================================================================================================
+count = 0
+
 for folder in os.listdir('.'):
     if os.path.isdir( folder ):
-        if folder != str( int(leaveFolder) ):
-            if flag_cp == '1' :
-                #print('scp -r {} {}'.format(folder, workDirectionZeus) )
-                os.system('scp -r {} {}'.format(folder, workDirectionZeus) )
-            if flag_cp == '2':
-                #print('scp -r {}/{} .'.format(workDirectionZeus,folder) )
-                os.system('scp -r {}/{} .'.format(workDirectionZeus,folder) )
+        if flag_cp == '1' :
+            #print('scp -r {} {}'.format(folder, workDirectionZeus) )
+            os.chdir( folder )
+            os.system('scp * {}/{}'.format( workDirectionZeus, folder) )
+            os.chdir('../')
+                    
+            count += 1
+            
+        if flag_cp == '2':
+            #print('scp -r {}/{} .'.format(workDirectionZeus,folder) )
+            os.chdir( folder )
+            os.system('scp {}/{}/* .'.format(workDirectionZeus, folder) )
+            #os.system('scp {}/{}/log.lammps .'.format(workDirectionZeus,folder) )
+            os.chdir('../')
+
+            count += 1
+
+print( linecomment )
+print('count = {}'.format(count) )
