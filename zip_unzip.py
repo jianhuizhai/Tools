@@ -46,7 +46,6 @@ if flag == '1':
                                 os.remove( filename )
                             if filename == 'log.lammps':
                                 zip.write( filename )
-                                os.remove( filename ) 
                             if filename.startswith('dump.relax'):
                                 zip.write( filename )
                                 os.remove( filename )
@@ -56,13 +55,14 @@ if flag == '1':
             elif flag_zip == '2':
                 # unzip
                 if not os.path.exists( zip_filename ):
-                    exit('{} does not exist.'.format( zip_filename ) )
-                with zipfile.ZipFile('results.zip', 'r') as zip :
-                    print('unzip files : {}'.format( zip.namelist() ) )
-                    zip.extractall(path='.')
+                    print('{} does not exist.'.format( zip_filename ) )
+                else:
+                    with zipfile.ZipFile('results.zip', 'r') as zip :
+                        print('unzip files : {}'.format( zip.namelist() ) )
+                        zip.extractall(path='.')
                 
-                if flag_rm == 'y' :
-                    os.remove( zip_filename )
+                    if flag_rm == 'y' :
+                        os.remove( zip_filename )
                 
             os.chdir('../')
 
@@ -94,7 +94,6 @@ elif flag == '2' :
                                             os.remove( filename )
                                         if filename == 'log.lammps':
                                             zip.write( filename )
-                                            os.remove( filename )
                                         if filename.startswith('dump.relax'):
                                             zip.write( filename )
                                             os.remove( filename )
@@ -112,4 +111,4 @@ elif flag == '2' :
 
 end = time.time()
 print( linecommont )
-print('running time is : {}s'.format(end-begin) )
+print('running time is : {}s'.format( (end-begin)/60. ) )

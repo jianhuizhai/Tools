@@ -20,11 +20,6 @@ if flag == '1':
     for i in range( len(folders) ):
         if binding_energy[i] <= 0 :
             keepFolder.append( folders[i] )
-    '''
-    elif flag_keep == '2':
-        for i in range(3):
-            keepFolder.append( folders[i] )
-    '''
     
     for folder in os.listdir('.'):
         if os.path.isdir(folder):
@@ -103,11 +98,7 @@ elif flag == '2' :
                     for i in range( len(folders) ):
                         if binding_energy[i] <= 0 :
                             keepFolder.append( folders[i] )
-                    '''
-                    elif flag_keep == '2':
-                        for i in range(3):
-                            keepFolder.append( folders[i] )
-                    '''
+
                     for folder in os.listdir( energy_infoPath ):
                         if os.path.isdir( os.path.join(energy_infoPath,folder) ):  # import. It will only show part of folders in this folder is use os.path.isdir(folder)
                             if any( [ folder == str( int(k) ) for k in keepFolder ] ) :
@@ -115,7 +106,7 @@ elif flag == '2' :
                                     print(linecommon)
                                     print( "The dumpfiles in this folder are keeped : {:10s}".format(folder) )
                                 for filename in os.listdir( os.path.join(energy_infoPath, folder) ):
-                                    if filename == 'dump.relax0' or filename.startswith('slurm'):
+                                    if filename.startswith('slurm'):
                                         os.remove( os.path.join(energy_infoPath, folder, filename) )  
                                     
                                     # delete dump_diff.cfg, dump_diff.xsf, dump_both.xsf and dump_norm.dat
