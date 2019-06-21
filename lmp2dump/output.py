@@ -1,4 +1,5 @@
 import numpy as np
+#from progressbar import ProgressBar
 
 def DumpOutput(filename, xlim, ylim, zlim, atomid, atomtype, x, y, z):
     newfile = open(filename, 'w')
@@ -20,7 +21,10 @@ def DumpOutput(filename, xlim, ylim, zlim, atomid, atomtype, x, y, z):
     newfile.write(line)
     line = 'ITEM: ATOMS id type element xu yu zu'+'\n'
     newfile.write(line)
-    for i in range(len(x)):
+
+    #progress = ProgressBar()
+    #for i in progress( range(len(x)) ):
+    for i in range(len(x)) :
         if( atomtype[i]== 1):
             element = 'Mg'
         else:

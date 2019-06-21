@@ -3,6 +3,7 @@
 import os
 import numpy as np
 import linecache
+from progressbar import ProgressBar
 from output import DumpOutput
 
 linecomment = '='*80
@@ -25,8 +26,11 @@ print(xlim, end='')
 print(ylim, end='')
 print(zlim, end='')
 
+print('loading {}'.format( lmp_file) )
+
 atom_id, atom_type, charge, x, y, z = np.loadtxt( lmp_file, skiprows=16, usecols=([0,1,2,3,4,5]), unpack=True)
 
+print('write {}'.format( dumpfile ) )
 DumpOutput( dumpfile, xlim, ylim, zlim, atom_id, atom_type, x, y, z)
 
 print('{} successfully generated.'.format( dumpfile ) )
