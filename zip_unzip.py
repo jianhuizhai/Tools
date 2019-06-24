@@ -41,14 +41,14 @@ if flag == '1':
                     print('{} exists.'.format( zip_filename ) )
                 else:
                     print('zip files : ' )
-                    with zipfile.ZipFile('results.zip', 'w', compression=zipfile.ZIP_DEFLATED) as zip:
+                    with zipfile.ZipFile('results.zip', 'w', compression=zipfile.ZIP_DEFLATED, allowZip64=True ) as zip:
                         for filename in os.listdir('.'):
                             if filename.endswith('lmp') or filename.endswith('.sh'):
                                 zip.write( filename )
                                 os.remove( filename )
-                            if filename == 'log.lammps':
+                            if filename.startswith( 'log.lammps' ):
                                 zip.write( filename )
-                            if filename.startswith('dump.relax'):
+                            if filename.startswith('dump.'):
                                 zip.write( filename )
                                 os.remove( filename )
                     #print( zip.namelist() )
@@ -84,20 +84,25 @@ elif flag == '2' :
         if flag_zip == '1' :
             if os.path.exists( zip_filename ):
                 print('{} exists.'.format( zip_filename ) )
+                if os.path.getsize( 'results.zip' ) <= 30 :
+                    os.remove( 'results.zip' )
             else:
-                with zipfile.ZipFile( 'results.zip', 'w', compression=zipfile.ZIP_DEFLATED) as zip:
+                with zipfile.ZipFile( 'results.zip', 'w', compression=zipfile.ZIP_DEFLATED, allowZip64=True) as zip:
                     for filename in os.listdir( '.' ):
                         if filename.endswith('lmp') or filename.endswith('.sh'):
                             zip.write( filename )
                             os.remove( filename )
-                        if filename == 'log.lammps':
+                        if filename.startswith( 'log.lammps' ):
                             zip.write( filename )
-                        if filename.startswith('dump.relax'):
+                        if filename.startswith('dump.'):
                             zip.write( filename )
                             os.remove( filename )
                         if filename.startswith('slurm'):
                             os.remove( filename )
-            #print( zip.namelist() )
+                #print('size(results.zip) : {}'.format(os.path.getsize('results.zip') ) )
+                if os.path.getsize( 'results.zip' ) <= 30 :
+                    os.remove( 'results.zip' )
+                #print( zip.namelist() )
         # unzip
         elif flag_zip == '2' :
             if not os.path.exists( zip_filename ):
