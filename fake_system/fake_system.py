@@ -8,79 +8,84 @@ import sys
 import linecache
 from output_fake import DumpOutput
 
+#=================================================================================
+#                   specify lmp_file
+#=================================================================================
 linecommon = '========================================================='
 
-print(linecommon)
-'''
-n = int(input("How many atoms are deleted : "))
-ions=[]
-while (n>0):
-    ions.append(input("atom id : "))
-    n = n-1
+lmp_file = sys.argv[1]
 
-ions = np.array( ions, dtype = int )  # change list to int array. 
-'''
-ions = np.loadtxt("deleted.dat", usecols=(0))
-print("The already deleted %i ions are : "  %ions.size)
-print( ions )
-
-
-lmp_file    = sys.argv[1]
-energy_file = sys.argv[2]
+#=================================================================================
+#                   print dat files info
+#=================================================================================
 
 print(linecommon)
+print("deleted_file: deleted.dat")
 print("lmp_file    : ", lmp_file)
-print("energy_file : ", energy_file)
-print(linecommon)
+print("energy_file : energy_info.dat")
+print("loading files...")
 
 xlim = linecache.getline(lmp_file, 6)
 ylim = linecache.getline(lmp_file, 7)
 zlim = linecache.getline(lmp_file, 8)
-
+print(linecommon)
 print(xlim, end='')
 print(ylim, end='')
 print(zlim, end='')
-print(linecommon)
 
+#=================================================================================
+#                       loading files
+#=================================================================================
 skipline  = 16
 atom_id, atom_type, x,y,z = np.loadtxt(lmp_file, skiprows=skipline, usecols=(0,1,2,3,4), unpack=True)
-eng_id, eng_eng = np.loadtxt(energy_file, usecols=(0,6), unpack=True)
+eng_id, eng_eng = np.loadtxt('energy_info.dat', usecols=(0,6), unpack=True)
 
-atom_id = list(atom_id)
+#=================================================================================
+#               change array to list (eassy to append data)
+#=================================================================================
+#          add already deleted data to atom_type, x, y and z; and assign Eng
+#=================================================================================
+atom_id   = list(atom_id)
+atom_type = list(atom_type)
+x         = list(x)
+y         = list(y)
+z         = list(z)
+Eng       = [20]*len(atom_id)
+
+#length = len( open('deleted.dat').read() )
+
+length = len( open(r"deleted.dat",'rU').readlines())
 '''
-print("type(atom_id) : ", type(atom_id))
-print("type(ions) : ", type(ions))
-'''
+if length != 0:
+    id_d, x_d, y_d, z_d = np.loadtxt("deleted.dat", usecols=(0,1,2,3), unpack=True)
 
-Eng = np.ones(len(atom_id))*20
-#print("Eng", Eng)
-
-if(ions.size != 0):
-    if( ions.size == 1):
-        id = atom_id.index(ions)
-        Eng[id] = 5
+    len_new = len(atom_id) + x_d.size
+    if( x_d.size == 1 ):
+    
+        atom_type.append(id_d)
+        x.append( x_d )         
+        y.append( y_d )
+        z.append( z_d )
+        Eng.append( 5 )
     else:
-        id = [atom_id.index( k ) for k in ions]
-        Eng[id] = 5
+        for i in range(x_d.size):
+            atom_type.append(id_d[i])
+            x.append( x_d[i] )
+            y.append( y_d[i] )
+            z.append( z_d[i] )
+            Eng.append( 5 )
+'''
+#--------------------------------------------------------------------------------
+#                assign the energy values of distributed ions to Eng
+#--------------------------------------------------------------------------------
 for k in range(eng_id.size):
     id = atom_id.index( eng_id[k] )
     Eng[id] = eng_eng[k]
 
-'''
-# this is the older version assign energy value
-for i in range(len(atom_id)):
-    if(ions.size != 0):
-        if(ions.size == 1):
-            if(atom_id[i] == ions):
-                Eng[i] = 5
-        else:
-            for k in range(ions.size):
-                if(atom_id[i] == ions[k]):
-                    Eng[i] = 5
-    for j in range(len(eng_id)):
-        if( atom_id[i] == eng_id[j] ):
-            Eng[i] = eng_eng[j]
-'''
+print(linecommon)
+print("The number of already deleted ions are %i: "  %length )
 
-DumpOutput('dump.eng',xlim, ylim, zlim, atom_id, atom_type, x, y, z, Eng)
-print("Output file: dump.eng")
+
+#=================================================================================
+DumpOutput('dump.vacancies'+str(length),xlim, ylim, zlim, atom_id, atom_type, x, y, z, Eng)
+print("Output file: dump.vacancies"+str(length) )
