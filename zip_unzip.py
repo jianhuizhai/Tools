@@ -39,14 +39,23 @@ if flag == '1':
             if flag_zip == '1' :
                 if os.path.exists( zip_filename ):
                     print('{} exists.'.format( zip_filename ) )
+                    print('-'*80)
+                    print('deleting dump files')
+                    if os.path.getsize( 'results.zip' ) <= 30 : ## zip file is too small (zip failure)
+                        os.remove( 'results.zip' )
+                    for filename in os.listdir('.'):
+                        if filename.startswith( 'dump.' ):
+                            os.remove( filename )
+                        if filename.endswith( 'lmp' ):
+                            os.remove( filename )
                 else:
                     print('zip files : ' )
                     with zipfile.ZipFile('results.zip', 'w', compression=zipfile.ZIP_DEFLATED, allowZip64=True ) as zip:
                         for filename in os.listdir('.'):
-                            if filename.endswith('lmp') or filename.endswith('.sh'):
+                            if filename.endswith('lmp') :
                                 zip.write( filename )
                                 os.remove( filename )
-                            if filename.startswith( 'log.lammps' ):
+                            if filename.startswith( 'log.lammps' ) or filename.endswith('.sh') :
                                 zip.write( filename )
                             if filename.startswith('dump.'):
                                 zip.write( filename )
@@ -58,7 +67,7 @@ if flag == '1':
                 # unzip
                 if not os.path.exists( zip_filename ):
                     print('{} does not exist.'.format( zip_filename ) )
-                
+                    
                 # only unzip results.zip in keepFolders which binding energy is negative
                 # vacancy is favorable to bind to the positive instead of staying in buck
                 else :
@@ -86,13 +95,19 @@ elif flag == '2' :
                 print('{} exists.'.format( zip_filename ) )
                 if os.path.getsize( 'results.zip' ) <= 30 :
                     os.remove( 'results.zip' )
+                print('delete dump files')
+                for filename in os.listdir('.'):
+                        if filename.startswith( 'dump.' ):
+                            os.remove( filename )
+                        if filename.endswith( 'lmp' ):
+                            os.remove( filename )
             else:
                 with zipfile.ZipFile( 'results.zip', 'w', compression=zipfile.ZIP_DEFLATED, allowZip64=True) as zip:
                     for filename in os.listdir( '.' ):
-                        if filename.endswith('lmp') or filename.endswith('.sh'):
+                        if filename.endswith('lmp') :
                             zip.write( filename )
                             os.remove( filename )
-                        if filename.startswith( 'log.lammps' ):
+                        if filename.startswith( 'log.lammps' ) or filename.endswith('.sh') :
                             zip.write( filename )
                         if filename.startswith('dump.'):
                             zip.write( filename )
@@ -116,8 +131,10 @@ elif flag == '2' :
         os.chdir(path)
 
 if flag_zip == '1':
+    print('='*80)
     print('zip files')
 else:
+    print('='*80)
     print('unzip files.')
 end = time.time()
 print( linecommont )
