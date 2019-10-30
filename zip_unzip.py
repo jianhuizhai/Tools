@@ -60,6 +60,8 @@ if flag == '1':
                             if filename.startswith('dump.'):
                                 zip.write( filename )
                                 os.remove( filename )
+                            if filename.startswith( 'slurm' ):
+                                zip.write( filename )
                     #print( zip.namelist() )
             
             # unzip
@@ -112,8 +114,8 @@ elif flag == '2' :
                         if filename.startswith('dump.'):
                             zip.write( filename )
                             os.remove( filename )
-                        if filename.startswith('slurm'):
-                            os.remove( filename )
+                        if filename.startswith( 'slurm' ):
+                            zip.write( filename )
                 #print('size(results.zip) : {}'.format(os.path.getsize('results.zip') ) )
                 if os.path.getsize( 'results.zip' ) <= 30 :
                     os.remove( 'results.zip' )
